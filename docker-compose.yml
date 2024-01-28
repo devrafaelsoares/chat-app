@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo
+    container_name: mongo_db
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_AUTHENTICATION_DATABASE=${MONGO_AUTHENTICATION_DATABASE}
+      - MONGO_DATABASE=${MONGO_DATABASE}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
+    networks:
+      - mongo-database
+volumes:
+  mongo: {}
+networks:
+  mongo-database:
+    driver: bridge
