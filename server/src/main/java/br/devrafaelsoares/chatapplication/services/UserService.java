@@ -1,6 +1,5 @@
 package br.devrafaelsoares.chatapplication.services;
 
-import br.devrafaelsoares.chatapplication.chat_message.ChatMessage;
 import br.devrafaelsoares.chatapplication.chat_message.ChatRegister;
 import br.devrafaelsoares.chatapplication.domain.user.Status;
 import br.devrafaelsoares.chatapplication.domain.user.User;
