@@ -3,12 +3,12 @@ services:
   mongo:
     image: mongo
     container_name: mongo_db
+    build:
+      context: server
     env_file:
       - .env
     ports:
       - "27017:27017"
-    volumes:
-      - mongo:/data
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
@@ -16,10 +16,42 @@ services:
       - MONGO_DATABASE=${MONGO_DATABASE}
       - MONGO_HOST=${MONGO_HOST}
       - MONGO_PORT=${MONGO_PORT}
+    restart: always
     networks:
-      - mongo-database
-volumes:
-  mongo: {}
+      - chat-application-network
+
+  server:
+    container_name: chat-application-server
+    env_file:
+      - .env
+    build:
+      context: server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_AUTHENTICATION_DATABASE=${MONGO_AUTHENTICATION_DATABASE}
+      - MONGO_DATABASE=${MONGO_DATABASE}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
+    depends_on:
+     - mongo
+    restart: always
+    networks:
+      - chat-application-network
+
+  client:
+    container_name: chat-application-app
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - "4173:80"
+    depends_on:
+      - server
+
 networks:
-  mongo-database:
+  chat-application-network:
     driver: bridge
